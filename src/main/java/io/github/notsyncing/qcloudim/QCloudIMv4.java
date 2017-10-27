@@ -429,11 +429,11 @@ public class QCloudIMv4 {
             return requestAsync("group_open_http_svc", "send_group_system_notification", request, SendGroupSystemNotificationResult.class);
         }
 
-        public ChangeGroupOwnerResult changeGroupOwner(CreateGroupRequest request) throws IOException, SignatureException {
+        public ChangeGroupOwnerResult changeGroupOwner(ChangeGroupOwnerRequest request) throws IOException, SignatureException {
             return request("group_open_http_svc", "change_group_owner", request, ChangeGroupOwnerResult.class);
         }
 
-        public CompletableFuture<ChangeGroupOwnerResult> changeGroupOwnerAsync(CreateGroupRequest request) {
+        public CompletableFuture<ChangeGroupOwnerResult> changeGroupOwnerAsync(ChangeGroupOwnerRequest request) {
             return requestAsync("group_open_http_svc", "change_group_owner", request, ChangeGroupOwnerResult.class);
         }
 
