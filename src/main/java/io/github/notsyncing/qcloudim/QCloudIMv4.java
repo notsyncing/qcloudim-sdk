@@ -511,11 +511,11 @@ public class QCloudIMv4 {
             return requestAsync("openim_dirty_words", "add", request, AddDirtyWordResult.class);
         }
 
-        public DeleteDirtyWordResult add(DeleteDirtyWordRequest request) throws IOException, SignatureException {
+        public DeleteDirtyWordResult delete(DeleteDirtyWordRequest request) throws IOException, SignatureException {
             return request("openim_dirty_words", "delete", request, DeleteDirtyWordResult.class);
         }
 
-        public CompletableFuture<DeleteDirtyWordResult> addAsync(DeleteDirtyWordRequest request) {
+        public CompletableFuture<DeleteDirtyWordResult> deleteAsync(DeleteDirtyWordRequest request) {
             return requestAsync("openim_dirty_words", "delete", request, DeleteDirtyWordResult.class);
         }
     }
@@ -541,17 +541,17 @@ public class QCloudIMv4 {
             return request("openconfigsvr", "getappinfo", request, GetAppInfoResult.class);
         }
 
-        public CompletableFuture<GetAppInfoResult> getNoSpeakingAsync(GetAppInfoRequest request) {
+        public CompletableFuture<GetAppInfoResult> getAppInfoAsync(GetAppInfoRequest request) {
             return requestAsync("openconfigsvr", "getappinfo", request, GetAppInfoResult.class);
         }
     }
 
     public class OpenMsgSvc {
-        public GetHistoryResult getNoSpeaking(GetHistoryRequest request) throws IOException, SignatureException {
+        public GetHistoryResult getHistory(GetHistoryRequest request) throws IOException, SignatureException {
             return request("open_msg_svc", "get_history", request, GetHistoryResult.class);
         }
 
-        public CompletableFuture<GetHistoryResult> getNoSpeakingAsync(GetHistoryRequest request) {
+        public CompletableFuture<GetHistoryResult> getHistoryAsync(GetHistoryRequest request) {
             return requestAsync("open_msg_svc", "get_history", request, GetHistoryResult.class);
         }
     }
