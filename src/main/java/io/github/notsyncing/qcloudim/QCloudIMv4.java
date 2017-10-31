@@ -495,11 +495,11 @@ public class QCloudIMv4 {
     }
 
     public class OpenIMDirtyWords {
-        public GetDirtyWordResult get(GroupMsgGetSimpleRequest request) throws IOException, SignatureException {
+        public GetDirtyWordResult get(GetDirtyWordRequest request) throws IOException, SignatureException {
             return request("openim_dirty_words", "get", request, GetDirtyWordResult.class);
         }
 
-        public CompletableFuture<GetDirtyWordResult> getAsync(GroupMsgGetSimpleRequest request) {
+        public CompletableFuture<GetDirtyWordResult> getAsync(GetDirtyWordRequest request) {
             return requestAsync("openim_dirty_words", "get", request, GetDirtyWordResult.class);
         }
 
