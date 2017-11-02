@@ -125,8 +125,7 @@ public class TlsSignature {
         byte [] compressBytes = new byte [512];
         int compressBytesLength = compresser.deflate(compressBytes);
         compresser.end();
-        String userSig = java.util.Base64.getUrlEncoder()
-                .encodeToString(Arrays.copyOfRange(compressBytes,0,compressBytesLength));
+        String userSig = new String(QCloudBase64Url.encodeUrl(Arrays.copyOfRange(compressBytes,0,compressBytesLength)));
 
         result.urlSig = userSig;
 
@@ -144,7 +143,7 @@ public class TlsSignature {
 		
 		//DeBaseUrl64 urlSig to json
 
-        byte[] compressBytes = java.util.Base64.getUrlDecoder().decode(urlSig.getBytes(Charset.forName("UTF-8")));
+        byte[] compressBytes = QCloudBase64Url.decodeUrl(urlSig.getBytes(Charset.forName("UTF-8")));
 		
 		//Decompression
 		Inflater decompression =  new Inflater();
