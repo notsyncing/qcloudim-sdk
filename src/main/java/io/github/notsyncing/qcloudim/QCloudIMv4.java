@@ -27,6 +27,9 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -69,6 +72,10 @@ public class QCloudIMv4 {
                 "&contenttype=json";
     }
 
+    public String makeUserSig(String identifier) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+        return TlsSignature.genTLSSignatureEx(appId, identifier, privateKey).urlSig;
+    }
+
     private <REQ extends QCloudIMRequest, RESP extends QCloudIMResult> RESP request(String serviceName,
                                                                                     String actionName,
                                                                                     REQ request,
@@ -77,7 +84,7 @@ public class QCloudIMv4 {
         request.setRandom(String.valueOf(random.nextInt()));
 
         try {
-            String userSig = TlsSignature.genTLSSignatureEx(appId, request.getReqIdentifier(), privateKey).urlSig;
+            String userSig = makeUserSig(request.getReqIdentifier());
             request.setUserSig(userSig);
         } catch (Exception e) {
             throw new SignatureException("Failed to generate signature for " + serviceName + " " + actionName + " " +
