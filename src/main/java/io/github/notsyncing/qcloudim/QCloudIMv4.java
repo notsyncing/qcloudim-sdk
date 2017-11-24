@@ -19,6 +19,7 @@ import io.github.notsyncing.qcloudim.utils.TlsSignature;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -91,7 +92,7 @@ public class QCloudIMv4 {
                     request.getReqIdentifier(), e);
         }
 
-        HttpEntity entity = new StringEntity(request.toJSONString());
+        HttpEntity entity = new StringEntity(request.toJSONString(), ContentType.APPLICATION_JSON);
 
         HttpPost post = new HttpPost(makeApiUrl(serviceName, actionName, request));
         post.setEntity(entity);
