@@ -26,12 +26,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URI;
+import java.nio.file.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -60,11 +61,35 @@ public class QCloudIMv4 {
         this.privateKey = privateKey;
     }
 
+    private String loadFile(URI uri) throws IOException {
+        if (uri.getScheme().equals("file")) {
+            return new String(Files.readAllBytes(Paths.get(uri)), "utf-8");
+        } else if (uri.getScheme().equals("jar")) {
+            String s = uri.toString();
+            int separator = s.indexOf("!/");
+            String entryName = s.substring(separator + 2);
+            URI fileURI = URI.create(s.substring(0, separator));
+
+            try (FileSystem fs = FileSystems.newFileSystem(fileURI, Collections.emptyMap())) {
+                return new String(Files.readAllBytes(fs.getPath(entryName)), "utf-8");
+            }
+        } else {
+            throw new IOException("Unsupported scheme " + uri.getScheme() + " for file " + uri);
+        }
+    }
+
     public QCloudIMv4(String appId, Path publicKeyFile, Path privateKeyFile) throws IOException {
         this(appId, "", "");
 
-        this.publicKey = new String(Files.readAllBytes(publicKeyFile), "utf-8");
-        this.privateKey = new String(Files.readAllBytes(privateKeyFile), "utf-8");
+        this.publicKey = loadFile(publicKeyFile.toUri());
+        this.privateKey = loadFile(privateKeyFile.toUri());
+    }
+
+    public QCloudIMv4(String appId, URI publicKeyFile, URI privateKeyFile) throws IOException {
+        this(appId, "", "");
+
+        this.publicKey = loadFile(publicKeyFile);
+        this.privateKey = loadFile(privateKeyFile);
     }
 
     private String makeApiUrl(String serviceName, String actionName, QCloudIMRequest request) {
