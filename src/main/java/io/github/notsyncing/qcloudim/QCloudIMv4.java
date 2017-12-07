@@ -1,11 +1,16 @@
 package io.github.notsyncing.qcloudim;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.DefaultJSONParser;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import io.github.notsyncing.qcloudim.models.QCloudIMRequest;
 import io.github.notsyncing.qcloudim.models.QCloudIMResult;
 import io.github.notsyncing.qcloudim.models.config.*;
 import io.github.notsyncing.qcloudim.models.dirtywords.*;
 import io.github.notsyncing.qcloudim.models.group.*;
+import io.github.notsyncing.qcloudim.models.message.contents.*;
 import io.github.notsyncing.qcloudim.models.ologin.*;
 import io.github.notsyncing.qcloudim.models.openim.*;
 import io.github.notsyncing.qcloudim.models.profile.PortraitGetRequest;
@@ -26,6 +31,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.file.*;
 import java.security.InvalidKeyException;
@@ -54,6 +60,38 @@ public class QCloudIMv4 {
     public OpenIMDirtyWords dirtyWords = new OpenIMDirtyWords();
     public OpenConfigSvr openConfigSvr = new OpenConfigSvr();
     public OpenMsgSvc openMsgSvc = new OpenMsgSvc();
+
+    static {
+        ParserConfig.getGlobalInstance().putDeserializer(MsgContent.class, new ObjectDeserializer() {
+            @Override
+            public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
+                JSONObject obj = parser.parseObject();
+
+                if (obj.containsKey("Ext")) {
+                    return (T)obj.toJavaObject(ImageMsgContent.class);
+                } else if (obj.containsKey("Index")) {
+                    return (T)obj.toJavaObject(FaceMsgContent.class);
+                } else if (obj.containsKey("FileName")) {
+                    return (T)obj.toJavaObject(FileMsgContent.class);
+                } else if (obj.containsKey("ImageFormat")) {
+                    return (T)obj.toJavaObject(ImageMsgContent.class);
+                } else if (obj.containsKey("Latitude")) {
+                    return (T)obj.toJavaObject(LocationMsgContent.class);
+                } else if (obj.containsKey("Second")) {
+                    return (T)obj.toJavaObject(SoundMsgContent.class);
+                } else if (obj.containsKey("Text")) {
+                    return (T)obj.toJavaObject(TextMsgContent.class);
+                }
+
+                return null;
+            }
+
+            @Override
+            public int getFastMatchToken() {
+                return 0;
+            }
+        });
+    }
 
     public QCloudIMv4(String appId, String publicKey, String privateKey) {
         this.appId = appId;
