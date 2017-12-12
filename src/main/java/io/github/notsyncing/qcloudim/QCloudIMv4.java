@@ -49,6 +49,7 @@ public class QCloudIMv4 {
     private String appId;
     private String publicKey;
     private String privateKey;
+    private String globalRequestIdentifier = null;
     private Random random = new Random();
     private CloseableHttpClient client = HttpClients.createDefault();
 
@@ -99,6 +100,10 @@ public class QCloudIMv4 {
         this.privateKey = privateKey;
     }
 
+    public void setGlobalRequestIdentifier(String adminIdentifier) {
+        this.globalRequestIdentifier = adminIdentifier;
+    }
+
     private String loadFile(URI uri) throws IOException {
         if (uri.getScheme().equals("file")) {
             return new String(Files.readAllBytes(Paths.get(uri)), "utf-8");
@@ -146,6 +151,10 @@ public class QCloudIMv4 {
                                                                                     Class<RESP> responseClass) throws IOException, SignatureException {
         request.setAppId(appId);
         request.setRandom(String.valueOf(random.nextInt()));
+
+        if (request.getReqIdentifier() == null) {
+            request.setReqIdentifier(globalRequestIdentifier);
+        }
 
         try {
             String userSig = makeUserSig(request.getReqIdentifier());
