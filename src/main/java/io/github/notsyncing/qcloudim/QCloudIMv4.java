@@ -150,7 +150,7 @@ public class QCloudIMv4 {
                                                                                     REQ request,
                                                                                     Class<RESP> responseClass) throws IOException, SignatureException {
         request.setAppId(appId);
-        request.setRandom(String.valueOf(random.nextInt()));
+        request.setRandom(String.valueOf(Math.abs(random.nextInt())));
 
         if (request.getReqIdentifier() == null) {
             request.setReqIdentifier(globalRequestIdentifier);
