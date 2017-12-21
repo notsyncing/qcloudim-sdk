@@ -177,7 +177,7 @@ public class QCloudIMv4 {
                         resp.getStatusLine().getStatusCode() + " " + resp.getStatusLine().getReasonPhrase());
             }
 
-            String result = EntityUtils.toString(respEntity);
+            String result = EntityUtils.toString(respEntity, "utf-8");
 
             return JSON.parseObject(result, responseClass);
         }
