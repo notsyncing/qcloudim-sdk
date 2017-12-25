@@ -10,7 +10,7 @@ public class PortraitSetRequest extends QCloudIMRequest {
     @JSONField(name = "From_Account")
     private String fromAccount;
 
-    @JSONField(name = "TagList")
+    @JSONField(name = "ProfileItem")
     private List<ProfileItem> tagList;
 
     public String getFromAccount() {
